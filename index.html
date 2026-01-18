@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="description" content="Garment Costing PWA – offline-ready garment FOB costing tool." />
+
+  <!-- iOS PWA-ish support -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <title>Garment Costing</title>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar__left">
+        <div class="brand">
+          <img class="brand__icon" src="assets/icons/icon-192.png" alt="Garment Costing" />
+          <div class="brand__text">
+            <div class="brand__name">Garment Costing</div>
+            <div class="brand__tag" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+      <div class="topbar__right">
+        <button id="btnNew" class="btn btn--primary" type="button">
+          <span class="btn__icon" aria-hidden="true">＋</span>
+          New Costing
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- LIST VIEW -->
+      <section id="viewList" class="view view--active" aria-labelledby="listTitle">
+        <div class="panel">
+          <div class="panel__header">
+            <div id="draftBanner" class="alert hidden" role="status"></div>
+            <h1 id="listTitle" class="h1">Saved costings</h1>
+            <div class="panel__actions">
+              <div class="search">
+                <input id="searchInput" class="input input--search" type="search" placeholder="Search by style name…" autocomplete="off" />
+              </div>
+              <button id="btnExport" class="btn btn--ghost" type="button" title="Backup all costings (JSON + images)">Backup</button>
+              <button id="btnImport" class="btn btn--ghost" type="button" title="Restore costings from a backup JSON file">Restore</button>
+              <input id="importFile" type="file" accept="application/json" class="hidden" />
+            </div>
+          </div>
+
+          <div id="emptyState" class="empty hidden">
+            <div class="empty__card">
+              <div class="empty__title">No saved costings yet</div>
+              <div class="empty__sub">Create your first costing to start building an audit trail.</div>
+              <button id="btnNewEmpty" class="btn btn--primary" type="button">Create costing</button>
+            </div>
+          </div>
+
+          <div id="productList" class="grid"></div>
+
+          <p class="disclaimer">
+            Disclaimer: <strong>Final costing should be reviewed before buyer submission.</strong>
+          </p>
+        </div>
+      </section>
+
+      <!-- FORM VIEW -->
+      
+      <!-- WIZARD VIEW -->
+      <section id="viewWizard" class="view" aria-labelledby="wizardTitle">
+        <div class="panel">
+          <div class="panel__header">
+            <div>
+              <h1 id="wizardTitle" class="h1">FOB Costing Wizard</h1>
+              <div id="wizardSub" class="muted">Enter one value at a time, like a factory costing sheet.</div>
+            </div>
+            <div class="panel__actions">
+              <button id="btnWizardCancel" class="btn btn--ghost" type="button">Back</button>
+            </div>
+          </div>
+
+          <div id="wizardError" class="alert hidden" role="alert"></div>
+
+          <div class="wizard">
+            <div class="wizard__progress">
+              <div class="wizard__progressMeta">
+                <div id="wizardStepLabel" class="muted"></div>
+                <div id="wizardStepCount" class="muted"></div>
+              </div>
+              <div class="progressbar" aria-hidden="true">
+                <div id="wizardProgressFill" class="progressbar__fill"></div>
+              </div>
+            </div>
+
+            <div class="wizard__card">
+              <div id="wizardTitleLine" class="wizard__title"></div>
+              <div id="wizardBody" class="wizard__body"></div>
+            </div>
+
+            <div class="wizard__nav">
+              <button id="btnPrev" class="btn btn--ghost" type="button">Previous</button>
+              <button id="btnNext" class="btn btn--primary" type="button">Next</button>
+            </div>
+          </div>
+
+          <div class="fineprint">
+            Disclaimer: <strong>Final costing should be reviewed before buyer submission.</strong>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- DETAIL VIEW -->
+      <section id="viewDetail" class="view" aria-labelledby="detailTitle">
+        <div class="panel">
+          <div class="panel__header">
+            <div>
+              <h1 id="detailTitle" class="h1">Costing detail</h1>
+              <div id="detailMeta" class="muted"></div>
+            </div>
+            <div class="panel__actions">
+              <button id="btnBackFromDetail" class="btn btn--ghost" type="button">Back</button>
+              <button id="btnDownloadPdf" class="btn btn--ghost" type="button" title="Save/Print this costing as PDF">Download PDF</button>
+              <button id="btnDownloadPng" class="btn btn--ghost" type="button" title="Download the final result as PNG">Download PNG</button>
+              <button id="btnDownloadJpg" class="btn btn--ghost" type="button" title="Download the final result as JPG">Download JPG</button>
+              <button id="btnDuplicate" class="btn btn--primary" type="button">Duplicate &amp; Recalculate</button>
+              <button id="btnDeleteProduct" class="btn btn--danger" type="button" title="Delete this costing">Delete</button>
+            </div>
+          </div>
+
+          <div id="detailCard" class="detail"></div>
+
+          <p class="disclaimer">
+            Disclaimer: <strong>Final costing should be reviewed before buyer submission.</strong>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__left">Garment Costing • <span id="appVersion"></span></div>
+      <div class="footer__right">
+        <span id="offlineBadge" class="badge badge--ok">Offline ready</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Print-only container (used for "Download PDF" without popups) -->
+  <div id="printRoot" class="hidden" aria-hidden="true"></div>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
