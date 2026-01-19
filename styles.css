@@ -875,3 +875,32 @@ details[open] .details__summary::after{ content:"▴"; }
   padding-bottom: 12px;
   resize: vertical;
 }
+
+
+/* ===== Fix: text clipped by rounded card/shadow ===== */
+
+/* Give the wizard step card more inner space */
+.wizardCard,
+.wizardStep,
+.panel,
+.card,
+.sheet,
+.stepCard {
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+}
+
+/* Extra safety for small helper texts (like "Used for display...") */
+.field label,
+.field .help,
+.hint,
+.note {
+  padding-left: 2px;
+}
+
+/* If any container is clipping children */
+.wizardCard,
+.wizardStep,
+.stepCard {
+  overflow: visible;
+}
